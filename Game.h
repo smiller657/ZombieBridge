@@ -2,8 +2,10 @@
 //CPSC-340-01
 //Zombie Bridge Project: Header file for the Game class
 //to manipulate user interaction and game status.
-
+#include <string>
 #include "linked_list.h"
+
+using namespace std;
 
 class Game {
 	
@@ -17,7 +19,7 @@ class Game {
 		//Des: Status of the game being won or not.
 		//Input: None.
 		//Output: True for a won game, false if it is not yet won.
-		bool IsWon() const;
+		bool IsWon();
 		
 		//Des: Status of the game being lost or not.
 		//Input: The members of the team on the east side of the gorge.
@@ -27,7 +29,7 @@ class Game {
 		//Des: Status of whether a Game is being played or not.
 		//Input: None.
 		//Output: True for playing currently, or false for the game is off.
-		bool IsPlaying() const;
+		bool IsPlaying();
 		
 		//Des: Sets up gorges and light location for a game.
 		//Input: None.
@@ -37,12 +39,12 @@ class Game {
 		//Des: Prints the game instructions for the user.
 		//Input: None.
 		//Output: None, but prints game instructions to the console.
-		void DisplayInstructions() const;
+		void DisplayInstructions();
 		
 		//Des: Displays game current statuses.
 		//Input: None.
 		//Output: None, but prints people on east and west gorges, time used, time remaining, who has the lantern. 
-		void DisplayStat() const;
+		void DisplayStats();
 		
 		//Des: Moves people from one gorge to the other and updates the lantern status.
 		//Input: A list of those moving from one gorge to another, using a linked list string.
@@ -63,8 +65,8 @@ class Game {
 		static const int JANITOR; //constant for janitor time (5)
 		static const int PROFESSOR; //constant for professor time (10)
 		
-		static const int GAME_PIECES = 6; //number of pieces
-		static const string GAME_PIECES[GAME_PIECES]; //What is on the bridge
+		static const int GAME_PIECES_NUM = 6; //number of pieces
+		static const string GAME_PIECES[GAME_PIECES_NUM]; //What is on the bridge
 		
 		linked_list <string> westGorge; //west of the gorge
 		linked_list <string> eastGorge; //east of the gorge
