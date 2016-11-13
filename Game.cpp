@@ -20,7 +20,7 @@ const int Game::PROFESSOR = 10;
 
 //Des: Constructor for the Game class.
 Game::Game() {
-	runningTime = 17;
+	runningTime = 0;
 	westGorge.initList();
 	eastGorge.initList();
 	bridge.initList();
@@ -28,22 +28,35 @@ Game::Game() {
 
 //Des: Status of the game being won or not.
 bool Game::IsWon() {
-	return false;
+	if (runningTime <= 17 && eastGorge.length() == 5) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
-//Des: Status of the game being won or not.
-bool Game::IsLost(const linked_list<string> &east) {
-	return false;
+//Des: Status of the game being lost or not.
+bool Game::IsLost(linked_list<string> &east) {
+	bool count = east.length();
+	if (runningTime > 17 && (count < 5)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 //Des: Status of whether a Game is being played or not.
 bool Game::IsPlaying() {
-	return true;		
+	if (runningTime > 0 && !IsWon() && !IsLost(eastGorge)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 //Des: Sets up gorges and light location for a game.
 void Game::SetUp() {
-	runningTime = 17;
+	runningTime = 0;
 	//clear west bank
 	westGorge.initList();
 	//clear east bank
@@ -78,42 +91,44 @@ void Game::DisplayInstructions() {
 //Des: Displays game current statuses.
 void Game::DisplayStats() {
 	cout<<endl;
+	cout<<"\t--- GAME STATS ---"<<endl;
 	//Who is on west bank
 	if (!westGorge.IsEmpty()) {
-		cout<<"West Gorge: "<<endl;
+		cout<<"\tWest Gorge: "<<endl;
 		westGorge.PrintAll();
 	} else {
-		cout<<"West Gorge is empty."<<endl;
+		cout<<"\tWest Gorge is empty."<<endl;
 	}
 	cout<<endl;
 	//Who is on east bank
 	if (!eastGorge.IsEmpty()) {
-		cout<<"East Gorge: "<<endl;
+		cout<<"\tEast Gorge: "<<endl;
 		eastGorge.PrintAll();
 	} else {
-		cout<<"East Gorge is empty."<<endl;
+		cout<<"\tEast Gorge is empty."<<endl;
 	}
 	cout<<endl;
 	//Who is on bridge
 	if (!bridge.IsEmpty()) {
-		cout<<"On the bridge, we find: "<<endl;
+		cout<<"\tBridge: "<<endl;
 		bridge.PrintAll();
 	} else {
-		cout<<"No one is on the bridge."<<endl;
+		cout<<"\tNo one is on the bridge."<<endl;
 	}
 	cout<<endl;
 	//Who has lantern
-	cout<<"The "<<whoIsHoldingLight<<" has the lantern."<<endl;
+	cout<<"\tThe "<<whoIsHoldingLight<<" has the lantern."<<endl;
 	//Time used
-	cout<<"Time used: "<<17-runningTime<<endl;
+	cout<<"\tTime used: "<<runningTime<<endl;
 	//Time remaining
-	cout<<"Time remaining: "<<runningTime<<endl;
+	cout<<"\tTime remaining: "<<17-runningTime<<endl;
+	cout<<"\t--- END STATS ---"<<endl;
 	cout<<endl;
-
 }
 
 //Des: Moves people from one gorge to the other and updates the lantern status.
 void Game::TransportPeople(linked_list<string> &fromGorge, linked_list<string> &toGorge) {
+	cout<<"--- BEGIN TURN ---"<<endl;
 	char input = ' ';
 	//Ask number to cross bridge
 	cout<<"How many people should cross the bridge now (1 or 2): ";
@@ -144,7 +159,7 @@ void Game::TransportPeople(linked_list<string> &fromGorge, linked_list<string> &
 	while (!validSelections) {
 		//Get the first input
 		while (!p1Good) {
-			cout<<"Select your first person to move by number: ";
+			cout<<"Select your first person to move by number (this person will hold the lantern): ";
 			while (cin.peek() >= '0' && cin.peek() <= '3') {
 				cin>>p1;
 			}
@@ -170,7 +185,7 @@ void Game::TransportPeople(linked_list<string> &fromGorge, linked_list<string> &
 			}
 			cin.ignore(80, '\n');
 		}
-		
+
 		//Convert player input for game piece selection from int to strings of the piecess
 		piece1 = GAME_PIECES[p1];
 		if (p2 != -1) {
@@ -192,7 +207,8 @@ void Game::TransportPeople(linked_list<string> &fromGorge, linked_list<string> &
 			p1Good = p2Good = false;
 		}
 	} //end while (!validSelections)
-
+	string message = piece1 + (piece2 == "" ? "" : (" and " + piece2));
+	cout<<"You selected "<<message<<"."<<endl;
 	//Get those people out of the appropriate gorge linked list
 	//Store as strings, not a number from the array
 	bool remove1 = fromGorge.Remove(piece1);
@@ -204,7 +220,7 @@ void Game::TransportPeople(linked_list<string> &fromGorge, linked_list<string> &
 	if (!remove1 && !(piece2 != "" ? remove2 : true) && !remove3) {
 		cout<<"Removing from gorge failed."<<endl;
 	}
-	
+
 	//Move pawns to bridge and update tracking variables
 	bool bridge1 = bridge.InsertInOrder(piece1);
 	bool bridge2 = false;
@@ -220,18 +236,18 @@ void Game::TransportPeople(linked_list<string> &fromGorge, linked_list<string> &
 	lightLocation = BRIDGE;
 
 	if (piece1 == "professor" || piece2 == "professor") {
-		runningTime -= PROFESSOR;
+		runningTime += PROFESSOR;
 	} else if (piece1 == "janitor" || piece2 == "janitor") {
-		runningTime -= JANITOR;
+		runningTime += JANITOR;
 	} else if (piece1 == "assistant" || piece2 == "assistant") {
-		runningTime -= LAB;
+		runningTime += LAB;
 	} else {
-		runningTime -= INTERN;
+		runningTime += INTERN;
 	}
 
 	//print stats
 	DisplayStats();
-	
+
 	//put people in appropriate gorge linked list
 	remove1 = bridge.Remove(piece1);
 	bool insert1 = toGorge.InsertInOrder(piece1);
@@ -248,6 +264,7 @@ void Game::TransportPeople(linked_list<string> &fromGorge, linked_list<string> &
 	if (!insert1 && !(piece2 != "" ? insert2 : true) && !insert3) {
 		cout<<"Insert to gorge failed."<<endl;
 	}
+	cout<<"--- END TURN ---"<<endl;
 } //End transportPeople function
 
 //Des: Plays the game.
@@ -256,37 +273,29 @@ void Game::Play() {
 	SetUp();
 	//Display State
 	DisplayStats();
-	//While not won or lost
-	//{
-	//If lantern is on west bank
-	//Move people from west to east
-	TransportPeople(westGorge, eastGorge);
-	//else if lantern is on east bank
-
-	//Move people east to west
-
-	//Display stats
-
-	//}
-
+	//while not won or lost
+	while (!(IsWon()) && !(IsLost(eastGorge))) {
+		//If lantern is on west bank
+		if (lightLocation == "west") {
+			cout<<"Travel: west ---> east"<<endl;
+			//Move people from west to east
+			TransportPeople(westGorge, eastGorge);
+			lightLocation = "east";
+		} else {
+			//else if lantern is on east bank
+			//Move people east to west
+			cout<<"Travel: west <--- east"<<endl;
+			TransportPeople(eastGorge, westGorge);
+			lightLocation = "west";
+		}
+		//Display stats
+		DisplayStats();
+	}
+	if (IsWon()) {
+		cout<<"You get the last member of the party across, "<<endl;
+		cout<<"cut the ropes of the bridge, and contain the mutant zombies!"<<endl;
+	} else {
+		cout<<"You ran out of time!"<<endl;
+		cout<<"The zombies caught up to your party before you could cut the ropes!"<<endl;
+	}
 }
-
-/*private:
-  const string WEST; //constant for west
-  const string EAST; //constant for east
-  const string BRIDGE; //constant for bridge
-  const int INTERN; //constant for intern time (1)
-  const int LAB; //constant for lab assistant time (2)
-  const int JANITOR; //constant for janitor time (5)
-  const int PROFESSOR; //constant for professor time (10)
-
-  static const int GAME_PIECES = 5; //number of pieces
-  static const string GAME_PIECES[GAME_PIECES]; //What is on the bridge
-
-  linked_list <string> westGorge; //west of the gorge
-  linked_list <string> eastGorge; //east of the gorge
-  linked_list <string> bridge; //over of the gorge
-
-  string lightLocation; //light location
-  string whoIsHoldingLight; //who holds the light when crossing
-  int runningTime;*/

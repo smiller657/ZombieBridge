@@ -1,3 +1,6 @@
+//Samantha Miller
+//CPSC-340-01
+//Zombie Bridge Project: Implementation file for single node of template time class methods
 #include "single_node.h"
 #ifndef NODE_CPP
 #define NODE_CPP

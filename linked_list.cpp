@@ -1,3 +1,6 @@
+//Samantha Miller
+//CPSC-340-01
+//Zombie Bridge Project: The method implementation for the linked list of template type.
 #include "linked_list.h"
 #ifndef LIST_CPP
 #define LIST_CPP
@@ -152,7 +155,7 @@ bool linked_list<NODETYPE>::Remove(NODETYPE & value)
 				value = current->data;
 				delete current;
 			}
-			count = 0;
+			count--;
 			return true;
 		}
 		else{                            //Case 4
@@ -289,7 +292,7 @@ void linked_list<NODETYPE>::PrintAll()
 		current = first;
 		while (current != NULL)
 		{
-			cout << current->data << endl;
+			cout <<"\t\t"<<current->data<< endl;
 			current = current->next;
 		}
 	}

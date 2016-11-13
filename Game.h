@@ -24,7 +24,7 @@ class Game {
 		//Des: Status of the game being lost or not.
 		//Input: The members of the team on the east side of the gorge.
 		//Output: True for a lost game, false still going.
-		bool IsLost(const linked_list<string> &east);
+		bool IsLost(linked_list<string> &east);
 		
 		//Des: Status of whether a Game is being played or not.
 		//Input: None.

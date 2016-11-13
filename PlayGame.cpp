@@ -9,18 +9,25 @@
 
 using namespace std;
 
+//Des: Creates an instance of the zombie bridge game until the user doesn't want to play any more.
+//Input: None, execpt the user interaction.
+//Output: The interactions of the game.
 int main() {
-	bool playAgain = true;
 	//Create an instance of the game;
 	Game game;
 	cout<<"Welcome to the Zombie Bridge problem!"<<endl<<endl;	
-	//do {
-//	game.DisplayInstructions();	
-	//Play the game
-	game.Play();	
-	//Play again?
-	
+	game.DisplayInstructions();
+	char again = 'y';
+	do {
+		//Play the game
+		game.Play();	
+		//Play again?
+		cout<<endl<<"Play again? (y/n): ";
+		cin>>again;
+		if (again != 'y' || again != 'n') {
+			cout<<"You did not answer correctly. Play again."<<endl;
+		}
 	//Reset to play again
-	//} while (playAgain);
+	} while (again != 'n');
 	return 0;
 }
