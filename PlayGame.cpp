@@ -24,7 +24,7 @@ int main() {
 		//Play again?
 		cout<<endl<<"Play again? (y/n): ";
 		cin>>again;
-		if (again != 'y' || again != 'n') {
+		if (again != 'y' && again != 'n') {
 			cout<<"You did not answer correctly. Play again."<<endl;
 		}
 	//Reset to play again

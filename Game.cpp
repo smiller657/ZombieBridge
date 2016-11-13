@@ -134,16 +134,21 @@ void Game::TransportPeople(linked_list<string> &fromGorge, linked_list<string> &
 	cout<<"How many people should cross the bridge now (1 or 2): ";
 	cin.get(input);
 	cin.ignore(80, '\n');
-	while (input != '1' && input != '2') {
-		cout<<"Invalid Answer. 1 or 2: ";
-		cin.get(input);
-		cin.ignore(80, '\n');
+	if (fromGorge.length() == 2) {
+		cout<<"There is only one person to move on this side of the gorge."<<endl;
+		input = '1';
+	} else {
+		while (input != '1' && input != '2') {
+			cout<<"Invalid Answer. 1 or 2: ";
+			cin.get(input);
+			cin.ignore(80, '\n');
+		}
 	}
 	cout<<endl;
 	//Menu  from game pieces - don't print lantern or zombies
 	cout<<"Game Piece Menu:"<<endl;
 	for (int i = 0; i < GAME_PIECES_NUM - 2; i++) {
-		cout<<i<<" "<<GAME_PIECES[i]<<endl;
+		cout<<"\t"<<i<<" "<<GAME_PIECES[i]<<endl;
 	}
 	cout<<endl;
 	//Ask who to move
